@@ -1106,7 +1106,7 @@ type Position struct {
 	Depth      int
 }
 
-func SolveDay2() {
+func Solve() {
 	x, y := calculateCommandResults(input)
 	xNew, yNew := calculateNewCommandResults(input)
 	log.Println("----------")

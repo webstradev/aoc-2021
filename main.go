@@ -10,8 +10,8 @@ import (
 
 // Maps passed day variable to the solver functions in the various packages
 var dayToFunctionMapper = map[string]func(){
-	"1": day1.SolveDay1,
-	"2": day2.SolveDay2,
+	"1": day1.Solve,
+	"2": day2.Solve,
 }
 
 func main() {

@@ -2049,7 +2049,7 @@ func createSlidingWindowMeasurements(measurements []int, windowSize int) []int {
 	return result
 }
 
-func SolveDay1() {
+func Solve() {
 	log.Println("----------")
 	log.Println("Day 1:")
 	day1puzzle1, day1puzzle2 := countIncreasedMeasurements(input), countIncreasedMeasurements(createSlidingWindowMeasurements(input, 3))
