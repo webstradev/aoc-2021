@@ -2022,6 +2022,31 @@ func countIncreasedMeasurements(measurements []int) int {
 	return count
 }
 
-func SolveDay1() int {
-	return countIncreasedMeasurements(input)
+// createSlidingWindowMeasurements creates a sliding window of n days for the measurements passed
+func createSlidingWindowMeasurements(measurements []int, windowSize int) []int {
+	result := []int{}
+
+	// Loop over all measurements
+	for index, measurement := range measurements {
+		// If there aren't enough measurements to create a n-day window
+		if index > len(measurements)-windowSize {
+			break
+		}
+
+		// Start with the value of the current measurement we are on
+		windowSum := measurement
+		// Grab the next n elements and add them to the count
+		for i := index + 1; i < index+windowSize; i++ {
+			windowSum += measurements[i]
+		}
+
+		// Append this result to the slice
+		result = append(result, windowSum)
+	}
+
+	return result
+}
+
+func SolveDay1() (int, int) {
+	return countIncreasedMeasurements(input), countIncreasedMeasurements(createSlidingWindowMeasurements(input, 3))
 }
