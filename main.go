@@ -8,5 +8,5 @@ import (
 
 func main() {
 	result := day1.SolveDay1()
-	log.Printf("amount of increases found : %d", result)
+	log.Printf("puzzle1 - amount of increases found : %d", result)
 }
