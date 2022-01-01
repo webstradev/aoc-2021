@@ -1081,7 +1081,10 @@ type Position struct {
 	Depth      int
 }
 
-func SolveDay2() *Position {
+func SolveDay2() {
 	x, y := calculateCommandResults(input)
-	return &Position{Horizontal: x, Depth: y}
+	log.Println("----------")
+	log.Println("Day 2:")
+	log.Printf("day2puzzle1 - Multiplying the coordinates of the final postion gives: %d", x*y)
+	log.Print("----------")
 }

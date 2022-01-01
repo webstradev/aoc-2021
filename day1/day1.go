@@ -1,5 +1,7 @@
 package day1
 
+import "log"
+
 var input = []int{
 	170,
 	176,
@@ -2047,6 +2049,11 @@ func createSlidingWindowMeasurements(measurements []int, windowSize int) []int {
 	return result
 }
 
-func SolveDay1() (int, int) {
-	return countIncreasedMeasurements(input), countIncreasedMeasurements(createSlidingWindowMeasurements(input, 3))
+func SolveDay1() {
+	log.Println("----------")
+	log.Println("Day 1:")
+	day1puzzle1, day1puzzle2 := countIncreasedMeasurements(input), countIncreasedMeasurements(createSlidingWindowMeasurements(input, 3))
+	log.Printf("day1puzzle1 - amount of increases found : %d", day1puzzle1)
+	log.Printf("day1puzzle2 - amount of increases found : %d", day1puzzle2)
+	log.Print("----------")
 }
