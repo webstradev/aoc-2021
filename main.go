@@ -17,17 +17,21 @@ var dayToFunctionMapper = map[string]func(){
 func main() {
 	day := os.Getenv("day")
 
+	// No day specified run all
 	if day == "" {
-		log.Printf("[ERROR] No Day Parameter passed, please specify the day you want to solve, example 'day=1 go run main.go'")
+		for _, dayFunction := range dayToFunctionMapper {
+			dayFunction()
+		}
 		return
 	}
 
+	// Incorrect day specified return error
 	if dayToFunctionMapper[day] == nil {
 		log.Printf("[ERROR] Invalid Day parameter passed")
 		return
 	}
 
-	// Run solver function which will return result
+	// Run solver function for a specific day
 	dayToFunctionMapper[day]()
 
 }
