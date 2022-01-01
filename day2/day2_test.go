@@ -120,6 +120,56 @@ var calculateCommandResultTests = []struct {
 	},
 }
 
+var calculateNewCommandResultTests = []struct {
+	name          string
+	commands      []string
+	expectedPos   int
+	expectedDepth int
+}{
+	{
+		"forward 1 and down 1",
+		[]string{"forward 1", "down 1"},
+		1,
+		0,
+	},
+	{
+		"down 1 and forward 1",
+		[]string{"down 1", "forward 1"},
+		1,
+		1,
+	},
+	{
+		"forward 2 and down 1",
+		[]string{"forward 2", "down 1"},
+		2,
+		0,
+	},
+	{
+		"forward 3 and down 1 but split",
+		[]string{"forward 1", "down 1", "forward 1", "forward 1"},
+		3,
+		2,
+	},
+	{
+		"forward 2 and down 3 and back up 1",
+		[]string{"forward 1", "down 1", "forward 1", "down 1", "down 1", "up 1"},
+		2,
+		1,
+	},
+	{
+		"forward 2 and down 3 and back up 1 and forward again",
+		[]string{"forward 1", "down 1", "forward 1", "down 1", "down 1", "up 1", "forward 1"},
+		3,
+		3,
+	},
+	{
+		"forward 1 and invalid",
+		[]string{"forward 1", "test"},
+		1,
+		0,
+	},
+}
+
 func TestValidateDirectionString(t *testing.T) {
 	for _, test := range validateDirectionTests {
 		t.Run(test.input, func(t *testing.T) {
@@ -142,6 +192,16 @@ func TestCalculateCommandResult(t *testing.T) {
 	for _, test := range calculateCommandResultTests {
 		t.Run(test.name, func(t *testing.T) {
 			gotPos, gotDepth := calculateCommandResults(test.commands)
+			assert.Equal(t, test.expectedPos, gotPos, "Calculated X value did not match expected")
+			assert.Equal(t, test.expectedDepth, gotDepth, "Calculated Y value did not match expected")
+		})
+	}
+}
+
+func TestCalculateNewCommandResults(t *testing.T) {
+	for _, test := range calculateNewCommandResultTests {
+		t.Run(test.name, func(t *testing.T) {
+			gotPos, gotDepth := calculateNewCommandResults(test.commands)
 			assert.Equal(t, test.expectedPos, gotPos, "Calculated X value did not match expected")
 			assert.Equal(t, test.expectedDepth, gotDepth, "Calculated Y value did not match expected")
 		})

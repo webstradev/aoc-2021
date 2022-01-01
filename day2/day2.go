@@ -1076,6 +1076,31 @@ func calculateCommandResults(commands []string) (int, int) {
 	return position, depth
 }
 
+// calculateNewCommandResults calculates the postion and depth of the submarine using aim method for a given list of commands
+func calculateNewCommandResults(commands []string) (int, int) {
+	position, depth, aim := 0, 0, 0
+
+	for _, commandString := range commands {
+		command := createCommandFromString(commandString)
+		if command == nil {
+			log.Printf("Failed to parse '%s' into a valid command. command ignored", commandString)
+		} else {
+			switch command.Direction {
+			case "forward":
+				position += command.Step
+				depth += command.Step * aim
+			case "up":
+				aim -= command.Step
+			case "down":
+				aim += command.Step
+			}
+		}
+
+	}
+
+	return position, depth
+}
+
 type Position struct {
 	Horizontal int
 	Depth      int
@@ -1083,8 +1108,10 @@ type Position struct {
 
 func SolveDay2() {
 	x, y := calculateCommandResults(input)
+	xNew, yNew := calculateNewCommandResults(input)
 	log.Println("----------")
 	log.Println("Day 2:")
 	log.Printf("day2puzzle1 - Multiplying the coordinates of the final postion gives: %d", x*y)
+	log.Printf("day2puzzle2 - Multiplying the coordinates of the final postion gives: %d", xNew*yNew)
 	log.Print("----------")
 }
