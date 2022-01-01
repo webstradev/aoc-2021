@@ -1041,7 +1041,6 @@ func createCommandFromString(input string) *Command {
 	// Parse second string to int
 	stepSize, err := strconv.Atoi(s[1])
 	if err != nil {
-		log.Printf("error parsing int from string: %s", err)
 		return nil
 	}
 
@@ -1055,7 +1054,7 @@ func calculateCommandResults(commands []string) (int, int) {
 	for _, commandString := range commands {
 		command := createCommandFromString(commandString)
 		if command == nil {
-			log.Printf("Failed to parse '%s' into a valid command. command ignored", commandString)
+			log.Printf("[ERROR] Failed to parse '%s' into a valid command. command ignored", commandString)
 		} else {
 			switch command.Direction {
 			case "forward":
@@ -1083,7 +1082,7 @@ func calculateNewCommandResults(commands []string) (int, int) {
 	for _, commandString := range commands {
 		command := createCommandFromString(commandString)
 		if command == nil {
-			log.Printf("Failed to parse '%s' into a valid command. command ignored", commandString)
+			log.Printf("[ERROR] Failed to parse '%s' into a valid command. command ignored", commandString)
 		} else {
 			switch command.Direction {
 			case "forward":
