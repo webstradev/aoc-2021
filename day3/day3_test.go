@@ -51,15 +51,139 @@ var calculateGammaTests = []struct {
 	name     string
 	input    []string
 	expected string
+	success  bool // should be false if err != nil
 }{
 	{
-		"4digit binary",
+		"4 * 4digit binary",
+		[]string{
+			"0101",
+			"1010",
+			"1010",
+			"0010",
+		},
+		"1010",
+		true,
+	},
+	{
+		"5 * 4digit binary",
 		[]string{
 			"0101",
 			"1010",
 			"1010",
 			"1010",
+			"1101",
 		},
 		"1010",
+		true,
 	},
+	{
+		"5 * 4digit binary with invalid input",
+		[]string{
+			"0101",
+			"1010",
+			"1010",
+			"1010",
+			"110a",
+		},
+		"",
+		false,
+	},
+}
+
+func TestCalculateGammaResult(t *testing.T) {
+	for _, test := range calculateGammaTests {
+		t.Run(test.name, func(t *testing.T) {
+			got, err := calculateGammaValue(test.input)
+			assert.Equal(t, test.success, err == nil, "Expected success does not match error state")
+			assert.Equal(t, test.expected, got, "Calculated gamma result was unexpected")
+		})
+	}
+}
+
+var calculateEpsilonFromGammaTests = []struct {
+	gamma   string
+	epsilon string
+	success bool
+}{
+	{
+		"1010",
+		"0101",
+		true,
+	},
+	{
+		"101a",
+		"",
+		false,
+	},
+	{
+		"1010001101",
+		"0101110010",
+		true,
+	},
+	{
+		"10100011",
+		"01011100",
+		true,
+	},
+}
+
+func TestCalculateEpsilonFromGamma(t *testing.T) {
+	for _, test := range calculateEpsilonFromGammaTests {
+		t.Run(test.gamma, func(t *testing.T) {
+			got, err := calculateEpsilonFromGamma(test.gamma)
+			assert.Equal(t, test.success, err == nil, "Expected success does not match error state")
+			assert.Equal(t, test.epsilon, got, "Calculated epsilon result was unexpected")
+		})
+	}
+}
+
+var calculatePowerConsumptionTests = []struct {
+	name     string
+	input    []string
+	expected int
+	success  bool
+}{
+	{
+		"normal valid input",
+		[]string{
+			"0101",
+			"1010",
+			"1010",
+			"0010",
+		},
+		50,
+		true,
+	},
+	{
+		"ivalid input in one of the binaries",
+		[]string{
+			"0101",
+			"1b10",
+			"1010",
+			"0010",
+		},
+		-1,
+		false,
+	},
+	{
+		"incorrect length in one of the binaries",
+		[]string{
+			"0101",
+			"11110",
+			"1010",
+			"0010",
+		},
+		-1,
+		false,
+	},
+}
+
+func TestCalculatePowerConsumption(t *testing.T) {
+	for _, test := range calculatePowerConsumptionTests {
+		t.Run(test.name, func(t *testing.T) {
+			got, err := calculatePowerConsumption(test.input)
+			assert.Equal(t, test.success, err == nil, "Expected success does not match error state")
+			assert.Equal(t, test.expected, got, "Calculated power consumption rate was unexpected")
+		})
+	}
 }
