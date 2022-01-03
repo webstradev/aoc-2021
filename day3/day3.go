@@ -1,6 +1,7 @@
 package day3
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"strconv"
@@ -45,7 +46,6 @@ func calculateGammaValue(input []string) (string, error) {
 		}
 		// Loop over each digit of this binary
 		for index, digit := range binary {
-
 			// If this digit is 1 then increase the count for that position
 			if digit == '1' {
 				ones[index] += 1
@@ -99,7 +99,7 @@ func calculatePowerConsumption(input []string) (int, error) {
 	}
 
 	// Convert binary to decimal
-	gammaDec, err := strconv.ParseInt(gammaBin, 2, 32)
+	gammaDec, err := strconv.ParseInt(gammaBin, 2, 64)
 	if err != nil {
 		return -1, err
 	}
@@ -111,13 +111,81 @@ func calculatePowerConsumption(input []string) (int, error) {
 	}
 
 	// Convert binary to decimal
-	epsilonDec, err := strconv.ParseInt(epsilonBin, 2, 32)
+	epsilonDec, err := strconv.ParseInt(epsilonBin, 2, 64)
 	if err != nil {
 		return -1, err
 	}
 
 	// return power consumption
 	return int(gammaDec * epsilonDec), nil
+}
+
+// calculateRating Calculate the o2 generator or co2 scrubber rating for an input
+func calculateRating(input []string, ratingType string, position int) (string, error) {
+
+	// Validate Rating Type
+	if !(ratingType == "o2" || ratingType == "co2") {
+		return "", errors.New("invalid rating type passed")
+	}
+
+	// If the input only has one binary then return this as the result
+	if len(input) == 1 {
+		return input[0], nil
+	}
+
+	// Calculate gamma rate and set it to the bit condition
+	bitCondition, err := calculateGammaValue(input)
+	if err != nil {
+		return "", err
+	}
+
+	// If the rating we want is the co2 scrubber rating then we use the epsilon rate instead of the gamma rate
+	if ratingType == "co2" {
+		bitCondition, err = calculateEpsilonFromGamma(bitCondition)
+		if err != nil {
+			return "", err
+		}
+	}
+
+	// Empty result slice
+	result := []string{}
+
+	// Find only the binary codes that have the matching position
+	for _, binary := range input {
+		if binary[position] == bitCondition[position] {
+			result = append(result, binary)
+		}
+	}
+
+	return calculateRating(result, ratingType, position+1)
+}
+
+// calculateLifeSupportRating calculates the o2 generator rating and the co2 scrubber rating and multiplies them to return the life support rating
+func calculateLifeSupportRating(input []string) (int, error) {
+	// calulate o2 generator rating recursively
+	o2RatingBin, err := calculateRating(input, "o2", 0)
+	if err != nil {
+		return -1, err
+	}
+
+	// Convert binary to decimal
+	o2RatingDec, err := strconv.ParseInt(o2RatingBin, 2, 64)
+	if err != nil {
+		return -1, err
+	}
+
+	// calculate c02 scrubber rating recursively
+	co2RatingBin, err := calculateRating(input, "co2", 0)
+	if err != nil {
+		return -1, err
+	}
+
+	co2RatingDec, err := strconv.ParseInt(co2RatingBin, 2, 64)
+	if err != nil {
+		return -1, err
+	}
+
+	return int(o2RatingDec * co2RatingDec), nil
 }
 
 func Solve() {
@@ -135,8 +203,16 @@ func Solve() {
 		return
 	}
 
+	// Solve Puzzle 2
+	lifeSupportRating, err := calculateLifeSupportRating(input)
+	if err != nil {
+		log.Printf("[ERROR] An error occurred while calulating Life Support rating: %v", err)
+		return
+	}
+
 	log.Println("----------")
 	log.Println("Day 3:")
 	log.Printf("day3puzzle1 - Power Consumption Rate: %d", powerConsumtion)
+	log.Printf("day3puzzle2 - Life Support Rating: %d", lifeSupportRating)
 	log.Print("----------")
 }

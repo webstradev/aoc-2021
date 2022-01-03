@@ -187,3 +187,237 @@ func TestCalculatePowerConsumption(t *testing.T) {
 		})
 	}
 }
+
+var calculateRatingTests = []struct {
+	name       string
+	input      []string
+	ratingType string
+	expected   string
+	success    bool
+}{
+	{
+		"invalid rating type - normal valid input",
+		[]string{
+			"00100",
+			"11110",
+			"10110",
+			"10111",
+			"10101",
+			"01111",
+			"00111",
+			"11100",
+			"10000",
+			"11001",
+			"00010",
+			"01010",
+		},
+		"oxygen",
+		"",
+		false,
+	},
+	{
+		"o2 - normal valid input",
+		[]string{
+			"00100",
+			"11110",
+			"10110",
+			"10111",
+			"10101",
+			"01111",
+			"00111",
+			"11100",
+			"10000",
+			"11001",
+			"00010",
+			"01010",
+		},
+		"o2",
+		"10111",
+		true,
+	},
+	{
+		"o2 - ivalid input in one of the binaries",
+		[]string{
+			"00100",
+			"1111a",
+			"10110",
+			"10111",
+			"10101",
+			"01111",
+			"00111",
+			"11100",
+			"10000",
+			"11001",
+			"00010",
+			"01010",
+		},
+		"o2",
+		"",
+		false,
+	},
+	{
+		"o2 - incorrect length in one of the binaries",
+		[]string{
+			"00100",
+			"1111a",
+			"10110",
+			"10111",
+			"10101",
+			"01111",
+			"00111",
+			"11100",
+			"10000",
+			"11001",
+			"00010",
+			"01010",
+		},
+		"o2",
+		"",
+		false,
+	},
+	{
+		"co2 - normal valid input",
+		[]string{
+			"00100",
+			"11110",
+			"10110",
+			"10111",
+			"10101",
+			"01111",
+			"00111",
+			"11100",
+			"10000",
+			"11001",
+			"00010",
+			"01010",
+		},
+		"co2",
+		"01010",
+		true,
+	},
+	{
+		"co2 - ivalid input in one of the binaries",
+		[]string{
+			"00100",
+			"1111a",
+			"10110",
+			"10111",
+			"10101",
+			"01111",
+			"00111",
+			"11100",
+			"10000",
+			"11001",
+			"00010",
+			"01010",
+		},
+		"co2",
+		"",
+		false,
+	},
+	{
+		"co2 - incorrect length in one of the binaries",
+		[]string{
+			"00100",
+			"1111a",
+			"10110",
+			"10111",
+			"10101",
+			"01111",
+			"00111",
+			"11100",
+			"10000",
+			"11001",
+			"00010",
+			"01010",
+		},
+		"co2",
+		"",
+		false,
+	},
+}
+
+func TestCalculateRating(t *testing.T) {
+	for _, test := range calculateRatingTests {
+		t.Run(test.name, func(t *testing.T) {
+			got, err := calculateRating(test.input, test.ratingType, 0)
+			assert.Equal(t, test.success, err == nil, "Expected success does not match error state")
+			assert.Equal(t, test.expected, got, "Calculated Rating was unexpected")
+		})
+	}
+}
+
+var calculateLifeSupportRatingTests = []struct {
+	name     string
+	input    []string
+	expected int
+	success  bool
+}{
+	{
+		"normal valid input",
+		[]string{
+			"00100",
+			"11110",
+			"10110",
+			"10111",
+			"10101",
+			"01111",
+			"00111",
+			"11100",
+			"10000",
+			"11001",
+			"00010",
+			"01010",
+		},
+		230,
+		true,
+	},
+	{
+		"ivalid input in one of the binaries",
+		[]string{
+			"00100",
+			"1111a",
+			"10110",
+			"10111",
+			"10101",
+			"01111",
+			"00111",
+			"11100",
+			"10000",
+			"11001",
+			"00010",
+			"01010",
+		},
+		-1,
+		false,
+	},
+	{
+		"incorrect length in one of the binaries",
+		[]string{
+			"00100",
+			"1111a",
+			"10110",
+			"10111",
+			"10101",
+			"01111",
+			"00111",
+			"11100",
+			"10000",
+			"11001",
+			"00010",
+			"01010",
+		},
+		-1,
+		false,
+	},
+}
+
+func TestCalculateLifeSupportRating(t *testing.T) {
+	for _, test := range calculateLifeSupportRatingTests {
+		t.Run(test.name, func(t *testing.T) {
+			got, err := calculateLifeSupportRating(test.input)
+			assert.Equal(t, test.success, err == nil, "Expected success does not match error state")
+			assert.Equal(t, test.expected, got, "Calculated Life Support Rating was unexpected")
+		})
+	}
+}
