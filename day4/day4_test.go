@@ -54,3 +54,51 @@ func TestSumBoard(t *testing.T) {
 		})
 	}
 }
+
+var isBoardWinningTests = []struct {
+	name    string
+	board   Board
+	winning bool
+}{
+	{
+		"Winning board - horizontal win",
+		Board{
+			{-1, -1, -1, -1, -1},
+			{10, 16, 15, -1, 19},
+			{18, 8, -1, 26, 20},
+			{22, -1, 13, 6, -1},
+			{-1, -1, 12, 3, -1},
+		},
+		true,
+	},
+	{
+		"Winning board - vertical win",
+		Board{
+			{-1, 15, 0, -1, 22},
+			{-1, 18, 13, -1, 5},
+			{-1, 8, -1, 25, 23},
+			{-1, 11, -1, 24, 4},
+			{-1, 21, 16, 12, -1},
+		},
+		true,
+	}, {
+		"Losing board",
+		Board{
+			{-1, 15, 0, -1, 22},
+			{15, 18, 13, -1, 5},
+			{-1, 8, -1, 25, 23},
+			{-1, 11, -1, 24, 4},
+			{-1, 21, 16, 12, -1},
+		},
+		false,
+	},
+}
+
+func TestIsBoardWinning(t *testing.T) {
+	for _, test := range isBoardWinningTests {
+		t.Run(test.name, func(t *testing.T) {
+			got := isBoardWinning(test.board)
+			assert.Equal(t, test.winning, got, "The function did not return an expected winning bool")
+		})
+	}
+}

@@ -21,3 +21,23 @@ func sumUnMarkedValues(board Board) int {
 
 	return count
 }
+
+// isBoardWinning checks if a board is a winning board
+func isBoardWinning(board Board) bool {
+	// Check if there is a row with all -1's
+	for _, x := range board {
+		if x[0] == -1 && x[1] == -1 && x[2] == -1 && x[3] == -1 && x[4] == -1 {
+			return true
+		}
+	}
+
+	// Check if there is a column with all -1's
+	for i := 0; i < 5; i++ {
+		if board[0][i] == -1 && board[1][i] == -1 && board[2][i] == -1 && board[3][i] == -1 && board[4][i] == -1 {
+			return true
+		}
+	}
+
+	// No winning rows or columns found:
+	return false
+}
