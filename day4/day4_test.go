@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestSumBoard(t *testing.T) {
@@ -49,7 +50,7 @@ func TestSumBoard(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			got := sumUnMarkedValues(test.board)
+			got := test.board.sumUnMarkedValues()
 			assert.Equal(t, test.sum, got, "Calculated sum was unexpected")
 		})
 	}
@@ -97,7 +98,7 @@ func TestIsBoardWinning(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			got := isBoardWinning(test.board)
+			got := test.board.isBoardWinning()
 			assert.Equal(t, test.winning, got, "The function did not return an expected winning bool")
 		})
 	}
@@ -155,5 +156,35 @@ func TestParseGameFromInput(t *testing.T) {
 			assert.Equal(t, test.success, err == nil, "Expected success does not match error state")
 			assert.Equal(t, test.expected, got, "The function did not return the expected game")
 		})
+	}
+}
+
+func TestPlayBingo(t *testing.T) {
+	tests := []struct {
+		name      string
+		inputPath string
+		findFirst bool
+		expErr    error
+		expSum    int
+	}{
+		{
+			"Valid Game - Find First Winning",
+			"./input_test.txt",
+			true,
+			nil,
+			4512,
+		},
+		{
+			"Valid Game - Find Last Winning",
+			"./input_test.txt",
+			false,
+			nil,
+			1924,
+		},
+	}
+	for _, test := range tests {
+		gotSum, gotErr := playBingoFromInput(test.inputPath, test.findFirst)
+		require.ErrorIs(t, test.expErr, gotErr)
+		require.Equal(t, test.expSum, gotSum)
 	}
 }
